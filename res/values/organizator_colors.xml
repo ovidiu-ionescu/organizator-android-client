@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+	<color name="message_color">#FF9933</color>
+	<color name="own_message_color">#777700</color>
+	<color name="time_color">#C0C0C0</color>
+	<color name="destination_color">#008000</color>
+	<color name="sender_color">#D0D000</color>
+	<color name="arrow_color">#666600</color>
+
+	<color name="user_active_color">#008000</color>
+	<color name="user_idle_color">#808000</color>
+	<color name="user_offline_color">#808080</color>
+
+
+	<style name="MessageTime">
+		<item name="android:textColor">@color/time_color</item>
+	</style>
+	<style name="MessageSender">
+		<item name="android:textColor">@color/sender_color</item>
+	</style>
+	<style name="MessageArrow">
+		<item name="android:textColor">@color/arrow_color</item>
+	</style>
+		<style name="MessageDestination">
+		<item name="android:textColor">@color/destination_color</item>
+	</style>
+
+</resources>
