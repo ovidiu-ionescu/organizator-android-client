@@ -1,7 +1,6 @@
 package ro.organizator.android.organizatorclient;
 
 import java.io.IOException;
-import android.widget.CheckBox;
 
 import org.apache.http.client.ClientProtocolException;
 
@@ -9,6 +8,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -16,12 +16,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class LoginActivity extends Activity {
+	
+	final static String LOG_TAG = LoginActivity.class.getName();
 
 	private EditText mUserView;
 	private EditText mPasswordView;
@@ -54,14 +58,15 @@ public class LoginActivity extends Activity {
 		mLoginStatusView = findViewById(R.id.login_status);
 		mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
 
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		//SharedPreferences settings = getApplicationContext().getSharedPreferences("Organizator", Context.MODE_PRIVATE);
 		lastUserName = settings.getString("username", "");
 		String encryptedPassword = settings.getString("parola", "");
 		if(!encryptedPassword.isEmpty()) {
 			try {
-				mPasswordView.setText(Cypher.decrypt("LoginActivity", encryptedPassword));
+				mPasswordView.setText(BCCypher.decrypt(encryptedPassword, lastUserName));
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.e(LOG_TAG, "OI: " + e);
 			}
 		}
 		boolean lastNumericPassword = settings.getBoolean("numericPassword", false);
@@ -117,15 +122,18 @@ public class LoginActivity extends Activity {
 				boolean numericPassword = mToggleNumericPassword.isChecked();
 				if(!username.equals(lastUserName) || lastNumericPassword != numericPassword) {
 					SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+					//SharedPreferences settings = getApplicationContext().getSharedPreferences("Organizator", Context.MODE_PRIVATE);
 					SharedPreferences.Editor editor = settings.edit();
 					editor.putString("username", username);
 					editor.putBoolean("numericPassword", numericPassword);
 					try {
-						editor.putString("parola", Cypher.encrypt("LoginActivity", mPasswordView.getText().toString()));
+						editor.putString("parola", BCCypher.encrypt(mPasswordView.getText().toString(), username));
 					} catch (Exception e) {
+						Log.e(LOG_TAG, "OI: Could not save the password");
 						e.printStackTrace();
 					}
 					editor.apply();
+//					editor.commit();
 				}
 
 				// start the service

@@ -31,6 +31,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
@@ -38,10 +40,13 @@ import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 public class OrganizatorMessagingService extends IntentService {
 
+	private static final String LOG_TAG = OrganizatorMessagingService.class.getName() + " OI:";
+	
 	private static final String ORGANIZATOR_CLIENT_MESSAGING_SERVICE_IS_RUNNING = "Organizator Client Messaging Service is Running.";
 	private static final String ORGANIZATOR_CLIENT_TICKER = "Organizator Client";
 	static final String UPDATED_CONTACTS = "updatedContacts";
@@ -80,6 +85,7 @@ public class OrganizatorMessagingService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
+		Log.d(LOG_TAG, "Intent in OrganizatorMessagingService");
 		try {
 			log("Handling the service intent");
 			username = intent.getCharSequenceExtra("username");
@@ -99,31 +105,43 @@ public class OrganizatorMessagingService extends IntentService {
 							}
 						}
 					}
-					processIncomingMessages();
-					retries = 0;
+					if(isNetworkAvailable()) {
+						processIncomingMessages();
+						retries = 0;
+					} else {
+						retries++;
+						if(retries > 7) {
+							Log.e(LOG_TAG, "Too much waiting, stopping the service until network is back");
+							stopSelf();
+							return;
+						}
+						Log.d(LOG_TAG, "No network available, go to sleep");
+						waitForBetterConnectivity(retries);
+					}
 					removeNotification(NotificationId.ERROR_RECEIVING_MESSAGES);
 				} catch(IOException ioe) {
-					System.err.println("OI: Error fetching messages: " + ioe.getMessage());
+					Log.e(LOG_TAG, "Error fetching messages: " + ioe.getMessage());
 					retries++;
-					try {
-						long sleep = 60;
-						if(retries < 6) {
-							sleep = 1 << (retries - 1);
-						}
-						if(devMessages) {
-							// Only display this for programmers
-							notifyError("Sleep " + sleep + "s before retry " + retries, ioe.getMessage());
-						}
-						Thread.sleep(sleep * 1000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+					waitForBetterConnectivity(retries);
 				}
 			}
 			stopSelf();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+
+	private void waitForBetterConnectivity(int retries) {
+		try {
+			long sleep = 60;
+			if(retries < 6) {
+				sleep = 1 << (retries - 1);
+			}
+			Log.d(LOG_TAG, "Sleep for " + sleep + " seconds");
+			Thread.sleep(sleep * 1000);
+		} catch (InterruptedException e) {
+			Log.e(LOG_TAG, "Thread interrupted " + e);
 		}
 	}
 
@@ -141,7 +159,7 @@ public class OrganizatorMessagingService extends IntentService {
 		int responseCode = conn.getResponseCode();
 		log("Server replied: " + responseCode);
 		if(responseCode == 401) {
-			System.err.println("OI: Need to login again");
+			Log.e(LOG_TAG, "OI: Need to login again");
 			conn.disconnect();
 			lastProcessedId = 0;
 			lastServerTime = 0;
@@ -247,6 +265,8 @@ public class OrganizatorMessagingService extends IntentService {
 				if(!msg.self) {
 					receivedMessages++;
 					lastReceivedMessage = msg;
+					// send the message to the wearable, if present
+					notifyMessageWearable(msg);
 				}
 			}
 			if(lastServerTime > 0) {
@@ -390,6 +410,22 @@ public class OrganizatorMessagingService extends IntentService {
 		nm.notify(NotificationId.NEW_MESSAGE_RECEIVED, n);
 	}
 
+	/**
+	 * Sends the message to the service that will display it on the watch
+	 * @param msg
+	 */
+	private void notifyMessageWearable(OrganizatorMessage msg) {
+        Intent serviceIntent = new Intent();
+        serviceIntent.setClassName("com.sonymobile.smartconnect.extension.notificationsample", "com.sonymobile.smartconnect.extension.notificationsample.SampleExtensionService");
+        serviceIntent.setAction("Organizator");
+        serviceIntent.putExtra("FROM", msg.from);
+        serviceIntent.putExtra("TO", msg.joinedTo);
+        serviceIntent.putExtra("TEXT", msg.text);
+        serviceIntent.putExtra("TIME", msg.time);
+        
+        startService(serviceIntent);
+	}
+
 	private void notifyError(CharSequence ticker, CharSequence content) {
 		putNotification(ticker, content, NotificationId.ORGANIZATOR_RUNNING, R.drawable.tulip_empty_bw);
 	}
@@ -439,7 +475,7 @@ public class OrganizatorMessagingService extends IntentService {
 
 	public void log(Object o) {
 		if(!loggingEnabled) return;
-		System.out.println("OI: " + o.toString());
+		Log.i(LOG_TAG, "OI: " + o.toString());
 	}
 
 	static Integer login(CharSequence name, CharSequence pwd) throws ClientProtocolException, IOException {
@@ -616,5 +652,11 @@ public class OrganizatorMessagingService extends IntentService {
 		conn.setReadTimeout(90000);
 
 		return conn;
+	}
+
+	private boolean isNetworkAvailable() {
+	    ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+	    return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
 	}
 }

@@ -51,15 +51,6 @@ public class MemoSearchActivity extends Activity {
 		});
 		
 		gestureDetector = new GestureDetector(this, simpleOnGestureListener);
-
-		System.out.println("YwiqUTQ0NDSS3i4T1sZ2a8ukuMLYdYykcBo=");
-		try {
-			System.out.println(Cypher.encrypt("CheieSecreta", "This is clear text"));
-			System.out.println(Cypher.decrypt("CheieSecreta", "YwiqUTQ0NDSS3i4T1sZ2a8ukuMLYdYykcBo="));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
 	}
 
 	public void search(View view) {

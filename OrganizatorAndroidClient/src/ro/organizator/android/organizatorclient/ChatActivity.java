@@ -36,9 +36,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.util.Log;
 
-public class ChatActivity extends FragmentActivity implements DestinationDialogFragment.DestinationDialogListener{
+public class ChatActivity extends FragmentActivity implements DestinationDialogFragment.DestinationDialogListener {
 
+	public static final String LOG_TAG = ChatActivity.class.getName();
+	
 	private MessageListFragment messageListFragment;
 	private OrganizatorMessagingService organizatorMessagingService;
 	private boolean serviceBound;
@@ -309,7 +312,7 @@ public class ChatActivity extends FragmentActivity implements DestinationDialogF
 			NotificationManager nm = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 			nm.cancel(NotificationId.NEW_MESSAGE_RECEIVED);
 		} else {
-			System.err.println("OI: No service in resume");
+			Log.w(LOG_TAG, "OI: No service in resume");
 		}
 	}
 
