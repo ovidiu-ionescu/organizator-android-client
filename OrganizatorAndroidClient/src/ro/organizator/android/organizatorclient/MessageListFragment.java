@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -15,6 +16,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class MessageListFragment extends ListFragment {
+	
+	static final String LOG_TAG = MessageListFragment.class.getName();
 	
 	private ArrayAdapter<OrganizatorMessage> adapter;
 
@@ -35,7 +38,7 @@ public class MessageListFragment extends ListFragment {
 		getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){ 
 			@Override 
 			public boolean onItemLongClick(AdapterView<?> av, View v, int pos, long id) { 
-				System.out.println("OI: Long click on item");
+				Log.d(LOG_TAG, "Long click on item");
 				final Dialog dialog = new Dialog(getActivity());
 				dialog.setContentView(R.layout.message_detail_dialog);
 				dialog.setTitle("Message Details");

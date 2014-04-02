@@ -32,7 +32,6 @@ public class BCCypher {
 		generator.init(PBEParametersGenerator.PKCS5PasswordToUTF8Bytes((password).toCharArray()), salt.getBytes(), 100);
 		KeyParameter params = (KeyParameter)generator.generateDerivedParameters(256);
 		return params;
-//		System.out.println(Arrays.toString(params.getKey()));
 	}
 
 	private static byte[] cipherData(PaddedBufferedBlockCipher cipher, byte[] data) throws DataLengthException, IllegalStateException, InvalidCipherTextException {

@@ -93,11 +93,9 @@ public class LoginActivity extends Activity {
 			try {
 				return OrganizatorMessagingService.login(params[0], params[1]);
 			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.e(LOG_TAG, "Failed to login", e);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.e(LOG_TAG, "Failed to login", e);
 			}
 			return null;
 		}
@@ -129,8 +127,7 @@ public class LoginActivity extends Activity {
 					try {
 						editor.putString("parola", BCCypher.encrypt(mPasswordView.getText().toString(), username));
 					} catch (Exception e) {
-						Log.e(LOG_TAG, "OI: Could not save the password");
-						e.printStackTrace();
+						Log.e(LOG_TAG, "OI: Could not save the password", e);
 					}
 					editor.apply();
 //					editor.commit();

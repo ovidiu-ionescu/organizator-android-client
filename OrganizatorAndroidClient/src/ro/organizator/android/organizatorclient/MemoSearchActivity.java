@@ -13,6 +13,7 @@ import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
@@ -23,6 +24,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 public class MemoSearchActivity extends Activity {
+
+	static final String LOG_TAG = MemoSearchActivity.class.getName();
+	
 	private OrganizatorMessagingService organizatorMessagingService;
 	private boolean serviceBound;
 	GestureDetector gestureDetector;
@@ -76,10 +80,9 @@ public class MemoSearchActivity extends Activity {
 					}
 				});
 			} catch (IOException e) {
-				e.printStackTrace();
+				Log.e(LOG_TAG, "Failed to search memo", e);
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.e(LOG_TAG, "Failed to search memo", e);
 			}
 
 			return null;

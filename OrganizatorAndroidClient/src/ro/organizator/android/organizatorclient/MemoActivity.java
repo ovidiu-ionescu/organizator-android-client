@@ -12,9 +12,12 @@ import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.EditText;
 
 public class MemoActivity extends Activity {
+	
+	static final String LOG_TAG = MemoActivity.class.getName();
 
 	private OrganizatorMessagingService organizatorMessagingService;
 	private boolean serviceBound;
@@ -31,7 +34,7 @@ public class MemoActivity extends Activity {
 
 	private void displayMemo() throws IOException, JSONException {
 		Long memoId = getIntent().getLongExtra("memo_id", 0);
-		System.out.println("OI: Memo Id " + memoId);
+		Log.d(LOG_TAG, "Memo Id " + memoId);
 		final EditText edit = (EditText) findViewById(R.id.memo);
 
 		final Memo memo = organizatorMessagingService.fetchMemo(memoId);
@@ -49,10 +52,9 @@ public class MemoActivity extends Activity {
 			try {
 				displayMemo();
 			} catch (IOException e) {
-				e.printStackTrace();
+				Log.e(LOG_TAG, "Failed to fetch memo", e);
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.e(LOG_TAG, "Failed to search memo", e);
 			}
 
 			return null;

@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,6 +21,9 @@ import android.view.GestureDetector.SimpleOnGestureListener;
 import android.widget.EditText;
 
 public class ChatSearchActivity extends FragmentActivity {
+	
+	static final String LOG_TAG = ChatSearchActivity.class.getName();
+
 	private OrganizatorMessagingService organizatorMessagingService;
 	private boolean serviceBound;
 	GestureDetector gestureDetector;
@@ -58,10 +62,9 @@ public class ChatSearchActivity extends FragmentActivity {
 					}
 				});
 			} catch (IOException e) {
-				e.printStackTrace();
+				Log.e(LOG_TAG, "Search failed", e);
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.e(LOG_TAG, "Search failed", e);
 			}
 
 			return null;

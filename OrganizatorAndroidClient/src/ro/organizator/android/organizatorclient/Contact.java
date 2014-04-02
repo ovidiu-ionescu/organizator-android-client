@@ -1,6 +1,10 @@
 package ro.organizator.android.organizatorclient;
 
+import android.util.Log;
+
 public class Contact implements Comparable<Contact>, Cloneable {
+	static final String LOG_TAG = Contact.class.getName();
+	
 	int id;
 	String name;
 	boolean active;
@@ -28,7 +32,7 @@ public class Contact implements Comparable<Contact>, Cloneable {
 		try {
 			return (Contact) super.clone();
 		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
+			Log.e(LOG_TAG, "Clone failed", e);
 		}
 		return null;
 	}

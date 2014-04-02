@@ -46,8 +46,7 @@ public class OrganizatorBroadcastReceiver extends BroadcastReceiver {
 				context.startService(intent);
 
 			} catch (Exception e) {
-				Log.e(LOG_TAG, "OI: " + e);
-				e.printStackTrace();
+				Log.e(LOG_TAG, "Failed to start the service", e);
 			}
 		} else {
 			Log.e(LOG_TAG, "OI: No password, Organizator service can not be started");

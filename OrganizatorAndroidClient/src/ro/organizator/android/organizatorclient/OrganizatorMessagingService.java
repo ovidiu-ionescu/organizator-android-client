@@ -127,8 +127,7 @@ public class OrganizatorMessagingService extends IntentService {
 			}
 			stopSelf();
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e(LOG_TAG, "Problem with server Json", e);
 		}
 	}
 

@@ -198,7 +198,7 @@ public class ChatActivity extends FragmentActivity implements DestinationDialogF
 				return code;
 			} catch (IOException e) {
 				notifyFailedToSendMessage(msg, e.getMessage());
-				e.printStackTrace();
+				Log.e(LOG_TAG, "Failed to send message", e);
 			}
 
 			return null;
@@ -441,17 +441,17 @@ public class ChatActivity extends FragmentActivity implements DestinationDialogF
 		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 			float SWIPE_MAX_OFF_PATH = 50, SWIPE_MIN_DISTANCE = 50, SWIPE_THRESHOLD_VELOCITY = 200;
 
-//			System.out.println("onFling: \n" + e1.toString() + "\n" + e2.toString() + "\n" + "velocityX= "
-//					+ String.valueOf(velocityX) + "\n" + "velocityY= " + String.valueOf(velocityY) + "\n" + "orizontal=" + (e1.getX() - e2.getX()));
+			Log.d(LOG_TAG, "onFling: \n" + e1.toString() + "\n" + e2.toString() + "\n" + "velocityX= "
+					+ String.valueOf(velocityX) + "\n" + "velocityY= " + String.valueOf(velocityY) + "\n" + "orizontal=" + (e1.getX() - e2.getX()));
 			if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
 				return true;
 			// right to left swipe
 			if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+//				Toast.makeText(ChatActivity.this, "Search Chat", Toast.LENGTH_SHORT).show();
 				gotoSearchActivity();
 				return true;
-//				Toast.makeText(ChatActivity.this, "Left Swipe", Toast.LENGTH_SHORT).show();
 			} else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-//				Toast.makeText(ChatActivity.this, "Right Swipe", Toast.LENGTH_SHORT).show();
+//				Toast.makeText(ChatActivity.this, "Search Memos", Toast.LENGTH_SHORT).show();
 				gotoMemoSearchActivity();
 				return true;
 			}
