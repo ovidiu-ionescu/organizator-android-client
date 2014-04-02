@@ -93,14 +93,23 @@ public class ChatActivity extends FragmentActivity implements DestinationDialogF
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
+		case R.id.menu_chat_search:
+			gotoChatSearchActivity();
+			return true;
+		case R.id.menu_memo_search:
+			gotoMemoSearchActivity();
+			return true;
 		case R.id.menu_settings:
-			gotoSearchActivity();
+			return true;
+		case R.id.menu_exit:
+			exitApp();
 			return true;
 		}
+			
 		return super.onOptionsItemSelected(menuItem);
 	}
 
-	private void gotoSearchActivity() {
+	private void gotoChatSearchActivity() {
 		Intent i = new Intent(this, ChatSearchActivity.class);
 		startActivity(i);
 	}
@@ -141,11 +150,7 @@ public class ChatActivity extends FragmentActivity implements DestinationDialogF
 		case 5:
 			// Exit application
 			Toast.makeText(this, "Exit App", Toast.LENGTH_SHORT).show();
-			if(organizatorMessagingService != null) {
-				organizatorMessagingService.shutdown = true;
-				organizatorMessagingService.stopSelf();
-			}
-			finish();
+			exitApp();
 			break;
 		}
 
@@ -159,6 +164,14 @@ public class ChatActivity extends FragmentActivity implements DestinationDialogF
 		return true;
 	}
 
+	private void exitApp() {
+		if(organizatorMessagingService != null) {
+			organizatorMessagingService.shutdown = true;
+			organizatorMessagingService.stopSelf();
+		}
+		finish();
+	}
+	
 	public void send(View view) {
 		// add a message to the list
 		EditText edit = (EditText)findViewById(R.id.compose_message);
@@ -448,7 +461,7 @@ public class ChatActivity extends FragmentActivity implements DestinationDialogF
 			// right to left swipe
 			if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
 //				Toast.makeText(ChatActivity.this, "Search Chat", Toast.LENGTH_SHORT).show();
-				gotoSearchActivity();
+				gotoChatSearchActivity();
 				return true;
 			} else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
 //				Toast.makeText(ChatActivity.this, "Search Memos", Toast.LENGTH_SHORT).show();

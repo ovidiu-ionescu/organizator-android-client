@@ -1,9 +1,27 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
+        android:id="@+id/menu_chat_search"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/menu_chat_search"/>
+
+    <item
+        android:id="@+id/menu_memo_search"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/menu_memo_search"/>
+
+    <item
         android:id="@+id/menu_settings"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/menu_search"/>
+        android:title="@string/menu_settings"/>
+
+    <item
+        android:id="@+id/menu_exit"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/menu_exit"/>
 
 </menu>

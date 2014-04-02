@@ -120,7 +120,7 @@ public class OrganizatorMessagingService extends IntentService {
 					}
 					removeNotification(NotificationId.ERROR_RECEIVING_MESSAGES);
 				} catch(IOException ioe) {
-					Log.e(LOG_TAG, "Error fetching messages: " + ioe.getMessage());
+					Log.e(LOG_TAG, "Error fetching messages: ",  ioe);
 					retries++;
 					waitForBetterConnectivity(retries);
 				}
