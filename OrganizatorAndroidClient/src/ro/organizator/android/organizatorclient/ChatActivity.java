@@ -100,6 +100,7 @@ public class ChatActivity extends FragmentActivity implements DestinationDialogF
 			gotoMemoSearchActivity();
 			return true;
 		case R.id.menu_settings:
+			gotoSettingsActivity();
 			return true;
 		case R.id.menu_exit:
 			exitApp();
@@ -116,6 +117,11 @@ public class ChatActivity extends FragmentActivity implements DestinationDialogF
 
 	private void gotoMemoSearchActivity() {
 		Intent i = new Intent(this, MemoSearchActivity.class);
+		startActivity(i);
+	}
+
+	private void gotoSettingsActivity() {
+		Intent i = new Intent(this, OrganizatorSettingsActivity.class);
 		startActivity(i);
 	}
 

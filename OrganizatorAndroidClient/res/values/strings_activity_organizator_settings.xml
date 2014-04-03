@@ -1,0 +1,35 @@
+<resources>
+
+    <string name="title_activity_organizator_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+
+    <!-- General settings -->
+    <string name="pref_header_general">General</string>
+    <string name="pref_title_start_at_boot">Start at Boot</string>
+	<string name="pref_description_start_at_boot">If the Organizator client should start automatically at system startup.</string>
+	<string name="pref_title_app_version">Version</string>
+	<string name="pref_description_app_version">OrganizatorAndroidClient version 1.0 build 33</string>
+    
+    
+
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+
+    <!-- Settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silent</string>
+    <string name="pref_title_vibrate">Vibrate</string>
+    <string name="pref_title_service_running">Service status</string>
+    <string name="pref_description_service_running">Show icon for the connections status of the Organizator service; empty tulip, no connection. Wait up to a minute for the setting to activate.</string>
+
+	<!-- Sony Watch Settings -->
+	<string name="pref_header_sony_watch">Sony Watch</string>
+	<string name="pref_title_send_notifications_to_sony_watch">Notify Sony Watch</string>
+	<string name="pref_description_send_notifications_to_sony_watch">Send new message notifications to Sony Watch</string>
+	<string name="pref_title_last_notification_to_sony_watch">Last notification sent to Sony Watch</string>
+	<string name="pref_description_last_notification_to_sony_watch">Last notification sent to the watch. Set to zero to reset.</string>
+    
+</resources>

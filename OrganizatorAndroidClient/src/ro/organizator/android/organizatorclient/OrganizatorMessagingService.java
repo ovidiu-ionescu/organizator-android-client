@@ -23,27 +23,39 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.TargetApi;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-public class OrganizatorMessagingService extends IntentService {
+public class OrganizatorMessagingService extends IntentService implements OnSharedPreferenceChangeListener {
+
+	public static final String LAST_NOTIFICATION_TO_SONY_WATCH = "last_notification_to_sony_watch";
+	public static final String SEND_NOTIFICATIONS_TO_SONY_WATCH = "send_notifications_to_sony_watch";
+	public static final String NOTIFICATIONS_NEW_MESSAGE = "notifications_new_message";
+	public static final String NOTIFICATIONS_NEW_MESSAGE_VIBRATE = "notifications_new_message_vibrate";
+	public static final String NOTIFICATIONS_NEW_MESSAGE_RINGTONE = "notifications_new_message_ringtone";
+	public static final String NOTIFICATIONS_SERVICE_RUNNING = "notifications_service_running";
 
 	private static final String LOG_TAG = OrganizatorMessagingService.class.getName() + " OI:";
 	
@@ -58,9 +70,18 @@ public class OrganizatorMessagingService extends IntentService {
 	private CharSequence username;
 	private CharSequence password;
 
+	/*
+	 * Options corresponding to preferences
+	 */
+	volatile boolean newMessageNotify = true;
+	volatile boolean serviceStatusNotification = false;
+	volatile String newMessageRingTone = "";
+	volatile boolean vibrateEnabled = false;
+	volatile boolean notifySonyWatch = true;
+	volatile long lastMessageIdForWearable = 0;
+	
 	boolean loggingEnabled = false;
 	boolean devMessages = false;
-	boolean vibrateEnabled = false;
 
 	public static final String DATA_RECEIVED = "data-received";
 
@@ -74,7 +95,7 @@ public class OrganizatorMessagingService extends IntentService {
 	static CharSequence separator = "\n--endofsection";
 
 	volatile OrganizatorMessage lastSentMessage;
-
+	
 	private long lastProcessedId;
 	long lastServerTime;
 	volatile List<OrganizatorMessage> messages = new ArrayList<OrganizatorMessage>();
@@ -83,6 +104,34 @@ public class OrganizatorMessagingService extends IntentService {
 		super("OrganizatorMessagingService");
 	}
 
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		Log.d(LOG_TAG, "Register for preference changes");
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+		// read some preferences
+		serviceStatusNotification = sharedPreferences.getBoolean(NOTIFICATIONS_SERVICE_RUNNING, true);
+		newMessageRingTone = sharedPreferences.getString(NOTIFICATIONS_NEW_MESSAGE_RINGTONE, "");
+		vibrateEnabled = sharedPreferences.getBoolean(NOTIFICATIONS_NEW_MESSAGE_VIBRATE, false);
+		newMessageNotify = sharedPreferences.getBoolean(NOTIFICATIONS_NEW_MESSAGE, true);
+		notifySonyWatch = sharedPreferences.getBoolean(SEND_NOTIFICATIONS_TO_SONY_WATCH, false);
+		String lastMessageIdForWearableString = sharedPreferences.getString(LAST_NOTIFICATION_TO_SONY_WATCH, "0");
+		lastMessageIdForWearable = lastMessageIdForWearableString.isEmpty() ? 0 : Long.parseLong(lastMessageIdForWearableString, 10); 
+		
+		sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+	}
+	
+	@Override 
+	public void onDestroy() {
+		super.onDestroy();
+		Log.d(LOG_TAG, "Unregister for preference changes");
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putString(LAST_NOTIFICATION_TO_SONY_WATCH, Long.toString(lastMessageIdForWearable, 10));
+		editor.apply();
+		sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);			
+	}
+	
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		Log.d(LOG_TAG, "Intent in OrganizatorMessagingService");
@@ -355,6 +404,7 @@ public class OrganizatorMessagingService extends IntentService {
 	 * Tell the system the Organizator service is important, a foreground service.
 	 */
 	
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN) 
 	private void fg() {
 		Context ctx = getApplicationContext();
 		Intent intent = new Intent(OrganizatorMessagingService.this, ChatActivity.class);
@@ -368,15 +418,25 @@ public class OrganizatorMessagingService extends IntentService {
 					.setWhen(System.currentTimeMillis())
 					.setContentTitle(ORGANIZATOR_CLIENT_TICKER)
 					.setContentText(ORGANIZATOR_CLIENT_MESSAGING_SERVICE_IS_RUNNING);
+		if(!serviceStatusNotification) {
+			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+				builder.setPriority(Notification.PRIORITY_MIN);
+			}
+		}
 		Notification notification = builder.build();
 		startForeground(NotificationId.ORGANIZATOR_RUNNING, notification);
 	}
 
 	public void notifyNewMessage(String ticker, String content, long time) {
+		if(!newMessageNotify) {
+			return;
+		}
 		try {
-			Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-			Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
-			r.play();
+			if(!newMessageRingTone.isEmpty()) {
+				Uri notificationSound = Uri.parse(newMessageRingTone);
+				Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notificationSound);
+				r.play();
+			}
 			if(vibrateEnabled) {
 				Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 				vibrator.vibrate(300);
@@ -414,6 +474,15 @@ public class OrganizatorMessagingService extends IntentService {
 	 * @param msg
 	 */
 	private void notifyMessageWearable(OrganizatorMessage msg) {
+		if(msg.id <= lastMessageIdForWearable) {
+			// message is old
+			return;
+		}
+		lastMessageIdForWearable = msg.id;
+
+		if(!notifySonyWatch) {
+			return;
+		}
         Intent serviceIntent = new Intent();
         serviceIntent.setClassName("com.sonymobile.smartconnect.extension.notificationsample", "com.sonymobile.smartconnect.extension.notificationsample.SampleExtensionService");
         serviceIntent.setAction("Organizator");
@@ -426,14 +495,15 @@ public class OrganizatorMessagingService extends IntentService {
 	}
 
 	private void notifyError(CharSequence ticker, CharSequence content) {
-		putNotification(ticker, content, NotificationId.ORGANIZATOR_RUNNING, R.drawable.tulip_empty_bw);
+		putNotification(ticker, content, NotificationId.ORGANIZATOR_RUNNING, R.drawable.tulip_empty_bw, !serviceStatusNotification);
 	}
 
 	private void removeNotifyError() {
-		putNotification(ORGANIZATOR_CLIENT_TICKER, ORGANIZATOR_CLIENT_MESSAGING_SERVICE_IS_RUNNING, NotificationId.ORGANIZATOR_RUNNING, R.drawable.tulip_bw);
+		putNotification(ORGANIZATOR_CLIENT_TICKER, ORGANIZATOR_CLIENT_MESSAGING_SERVICE_IS_RUNNING, NotificationId.ORGANIZATOR_RUNNING, R.drawable.tulip_bw, !serviceStatusNotification);
 	}
 
-	private void putNotification(CharSequence ticker, CharSequence content, int type, int icon) {
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN) 
+	private void putNotification(CharSequence ticker, CharSequence content, int type, int icon, boolean lowPriority) {
 		Context ctx = getApplicationContext();
 		Intent intent = new Intent(ctx, ChatActivity.class);
 		PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -451,6 +521,11 @@ public class OrganizatorMessagingService extends IntentService {
 					.setContentTitle(ticker)
 					.setContentText(content)
 					;
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+			if(lowPriority) {
+				builder.setPriority(Notification.PRIORITY_MIN);
+			}
+		}
 		Notification n = builder.build();
 
 		nm.notify(type, n);
@@ -657,5 +732,29 @@ public class OrganizatorMessagingService extends IntentService {
 	    ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 	    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 	    return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+	}
+
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+		if(NOTIFICATIONS_SERVICE_RUNNING.equals(key)) {
+			serviceStatusNotification = sharedPreferences.getBoolean(key, true);
+			Log.d(LOG_TAG, "serviceStatusNotification changed to: " + serviceStatusNotification);
+		} else if(NOTIFICATIONS_NEW_MESSAGE_RINGTONE.equals(key)) {
+			newMessageRingTone = sharedPreferences.getString(key, "");
+			Log.d(LOG_TAG, "Ringtone: [" + newMessageRingTone + "]");
+		} else if(NOTIFICATIONS_NEW_MESSAGE_VIBRATE.equals(key)) {
+			vibrateEnabled = sharedPreferences.getBoolean(key, false);
+			Log.d(LOG_TAG, "Vibrate: " + vibrateEnabled);
+		} else if(NOTIFICATIONS_NEW_MESSAGE.equals(key)) {
+			newMessageNotify = sharedPreferences.getBoolean(key, true);
+			Log.d(LOG_TAG, "Notify new messages: " + newMessageNotify);
+		} else if(SEND_NOTIFICATIONS_TO_SONY_WATCH.equals(key)) {
+			notifySonyWatch = sharedPreferences.getBoolean(key, false);
+			Log.d(LOG_TAG, "Send notifications to Sony watch: " + notifySonyWatch);
+		} else if(LAST_NOTIFICATION_TO_SONY_WATCH.equals(key)) {
+			String lastMessageIdForWearableString = sharedPreferences.getString(LAST_NOTIFICATION_TO_SONY_WATCH, "0");
+			lastMessageIdForWearable = lastMessageIdForWearableString.isEmpty() ? 0 : Long.parseLong(lastMessageIdForWearableString, 10); 
+			Log.d(LOG_TAG, "Last message id sent to wearable: " + lastMessageIdForWearable);
+		}
 	}
 }

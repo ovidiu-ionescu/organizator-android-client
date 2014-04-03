@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <!-- Send notifications to Sony watch -->
+    <CheckBoxPreference 
+        android:defaultValue="false"
+        android:key="send_notifications_to_sony_watch"
+        android:summary="@string/pref_description_send_notifications_to_sony_watch"
+        android:title="@string/pref_title_send_notifications_to_sony_watch"
+        />
+	<!-- Last message notified, 0 to start from scratch -->
+	<EditTextPreference 
+	    android:defaultValue="0"
+	    android:inputType="number"
+	    android:key="last_notification_to_sony_watch"
+	    android:title="@string/pref_title_last_notification_to_sony_watch"
+	    android:summary="@string/pref_description_last_notification_to_sony_watch"
+	    />    
+
+</PreferenceScreen>
