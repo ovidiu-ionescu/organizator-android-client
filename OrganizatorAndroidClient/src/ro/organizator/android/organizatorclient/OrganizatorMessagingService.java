@@ -50,6 +50,8 @@ import android.widget.Toast;
 
 public class OrganizatorMessagingService extends IntentService implements OnSharedPreferenceChangeListener {
 
+	public static final String LED_NOTIFICATION = "led_notification";
+	public static final String LED_NOTIFICATION_COLOR = "led_notification_color";
 	public static final String LAST_NOTIFICATION_TO_SONY_WATCH = "last_notification_to_sony_watch";
 	public static final String SEND_NOTIFICATIONS_TO_SONY_WATCH = "send_notifications_to_sony_watch";
 	public static final String NOTIFICATIONS_NEW_MESSAGE = "notifications_new_message";
@@ -79,6 +81,8 @@ public class OrganizatorMessagingService extends IntentService implements OnShar
 	volatile boolean vibrateEnabled = false;
 	volatile boolean notifySonyWatch = true;
 	volatile long lastMessageIdForWearable = 0;
+	volatile boolean ledNotification = true;
+	volatile int ledNotificationColor = 0xFFFF0000;
 	
 	boolean loggingEnabled = false;
 	boolean devMessages = false;
@@ -116,7 +120,9 @@ public class OrganizatorMessagingService extends IntentService implements OnShar
 		newMessageNotify = sharedPreferences.getBoolean(NOTIFICATIONS_NEW_MESSAGE, true);
 		notifySonyWatch = sharedPreferences.getBoolean(SEND_NOTIFICATIONS_TO_SONY_WATCH, false);
 		String lastMessageIdForWearableString = sharedPreferences.getString(LAST_NOTIFICATION_TO_SONY_WATCH, "0");
-		lastMessageIdForWearable = lastMessageIdForWearableString.isEmpty() ? 0 : Long.parseLong(lastMessageIdForWearableString, 10); 
+		lastMessageIdForWearable = lastMessageIdForWearableString.isEmpty() ? 0 : Long.parseLong(lastMessageIdForWearableString, 10);
+		ledNotification = sharedPreferences.getBoolean(LED_NOTIFICATION, true);
+		ledNotificationColor = sharedPreferences.getInt(LED_NOTIFICATION_COLOR, 0xFFFF0000);
 		
 		sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 	}
@@ -431,17 +437,6 @@ public class OrganizatorMessagingService extends IntentService implements OnShar
 		if(!newMessageNotify) {
 			return;
 		}
-		try {
-			if(!newMessageRingTone.isEmpty()) {
-				Uri notificationSound = Uri.parse(newMessageRingTone);
-				Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notificationSound);
-				r.play();
-			}
-			if(vibrateEnabled) {
-				Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-				vibrator.vibrate(300);
-			}
-		} catch (Exception e) {}
 
 		if(viewActive) {
 			return;
@@ -464,6 +459,18 @@ public class OrganizatorMessagingService extends IntentService implements OnShar
 					.setContentTitle(ticker)
 					.setContentText(content)
 					;
+
+		if(!newMessageRingTone.isEmpty()) {
+			Uri notificationSound = Uri.parse(newMessageRingTone);
+			builder.setSound(notificationSound);
+		}
+		long[] vibratePattern = { 300 }; 
+		if(vibrateEnabled) {
+			builder.setVibrate(vibratePattern);
+		}
+		if(ledNotification) {
+			builder.setLights(ledNotificationColor, 500, 500);
+		}
 		Notification n = builder.build();
 
 		nm.notify(NotificationId.NEW_MESSAGE_RECEIVED, n);
@@ -755,6 +762,12 @@ public class OrganizatorMessagingService extends IntentService implements OnShar
 			String lastMessageIdForWearableString = sharedPreferences.getString(LAST_NOTIFICATION_TO_SONY_WATCH, "0");
 			lastMessageIdForWearable = lastMessageIdForWearableString.isEmpty() ? 0 : Long.parseLong(lastMessageIdForWearableString, 10); 
 			Log.d(LOG_TAG, "Last message id sent to wearable: " + lastMessageIdForWearable);
+		} else if(LED_NOTIFICATION_COLOR.equals(key)) {
+			ledNotificationColor = sharedPreferences.getInt(key, 0xFFFF0000);
+			Log.d(LOG_TAG, "Let light notification color: " + ledNotificationColor);
+		} else if(LED_NOTIFICATION.equals(key)) {
+			ledNotification = sharedPreferences.getBoolean(key, true);
+			Log.d(LOG_TAG, "Let light notification: " + ledNotification);
 		}
 	}
 }

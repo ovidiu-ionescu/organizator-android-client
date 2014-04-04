@@ -7,7 +7,7 @@
 
     <!-- General settings -->
     <string name="pref_header_general">General</string>
-    <string name="pref_title_start_at_boot">Start at Boot</string>
+    <string name="pref_title_start_at_boot">Launch at Boot</string>
 	<string name="pref_description_start_at_boot">If the Organizator client should start automatically at system startup.</string>
 	<string name="pref_title_app_version">Version</string>
 	<string name="pref_description_app_version">OrganizatorAndroidClient version 1.0 build 34</string>
@@ -23,7 +23,11 @@
     <string name="pref_ringtone_silent">Silent</string>
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="pref_title_service_running">Service status</string>
-    <string name="pref_description_service_running">Show icon for the connections status of the Organizator service; empty tulip, no connection. Wait up to a minute for the setting to activate.</string>
+    <string name="pref_title_led_notification">Led notification</string>
+    <string name="pref_description_led_notification">Blink the notification led when a new message is received</string>
+    <string name="pref_title_led_notification_color">Led light notification color</string>
+    <string name="pref_description_led_notification_color">Choose a color for the led notification light.</string>
+    <string name="pref_description_service_running">Show icon for the connection status of the Organizator service; empty tulip, no connection. Wait up to a minute for the setting to activate.</string>
 
 	<!-- Sony Watch Settings -->
 	<string name="pref_header_sony_watch">Sony Watch</string>

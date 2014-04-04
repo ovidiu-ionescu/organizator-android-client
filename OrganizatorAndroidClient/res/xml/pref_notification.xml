@@ -26,6 +26,20 @@
         android:key="notifications_new_message_vibrate"
         android:title="@string/pref_title_vibrate" />
 
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:dependency="notifications_new_message"
+        android:key="led_notification"
+        android:title="@string/pref_title_led_notification"
+        android:summary="@string/pref_description_led_notification" />
+    
+    <yuku.ambilwarna.widget.AmbilWarnaPreference
+		android:key="led_notification_color"
+		android:defaultValue="0xffff0000" 
+		android:dependency="notifications_new_message"
+		android:title="@string/pref_title_led_notification_color"
+		android:summary="@string/pref_description_led_notification_color" />
+    
 	<CheckBoxPreference 
 	    android:defaultValue="true"
 	    android:key="notifications_service_running"

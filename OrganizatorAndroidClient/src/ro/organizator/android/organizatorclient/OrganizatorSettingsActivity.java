@@ -2,6 +2,9 @@ package ro.organizator.android.organizatorclient;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -16,6 +19,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 
@@ -33,6 +37,9 @@ import java.util.List;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class OrganizatorSettingsActivity extends PreferenceActivity {
+	
+	public static final String LOG_TAG = OrganizatorSettingsActivity.class.getName();
+
 	/**
 	 * Determines whether to always show the simplified settings UI, where
 	 * settings are presented in a single list. When false, settings are shown
@@ -40,11 +47,26 @@ public class OrganizatorSettingsActivity extends PreferenceActivity {
 	 * shown on tablets.
 	 */
 	private static final boolean ALWAYS_SIMPLE_PREFS = false;
+	
+	private static String versionString = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setupActionBar();
+		
+		PackageInfo pinfo;
+		try {
+			pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+			int versionNumber = pinfo.versionCode;
+			String versionName = pinfo.versionName;
+			
+			versionString = getResources().getString(R.string.app_name) + " version " + versionName + " build " + versionNumber;
+		} catch (NameNotFoundException e) {
+			Log.e(LOG_TAG, "Could not find own package name", e);
+			e.printStackTrace();
+		}
+
 	}
 
 	/**
@@ -238,6 +260,8 @@ public class OrganizatorSettingsActivity extends PreferenceActivity {
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.pref_general);
+			
+			findPreference("version").setSummary(versionString);
 
 			// Bind the summaries of EditText/List/Dialog/Ringtone preferences
 			// to their values. When their values change, their summaries are

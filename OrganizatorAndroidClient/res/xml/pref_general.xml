@@ -7,9 +7,9 @@
         android:title="@string/pref_title_start_at_boot"
         />
 
-    <Preference 
+    <Preference
+        android:key="version"
         android:title="@string/pref_title_app_version"
-        android:summary="@string/pref_description_app_version"
         android:enabled="true"
         />
     
