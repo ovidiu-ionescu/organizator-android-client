@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -20,9 +22,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -38,7 +40,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.util.Log;
 
-public class ChatActivity extends FragmentActivity implements DestinationDialogFragment.DestinationDialogListener {
+public class ChatActivity extends ActionBarActivity implements DestinationDialogFragment.DestinationDialogListener {
 
 	public static final String LOG_TAG = ChatActivity.class.getName();
 	
@@ -85,6 +87,7 @@ public class ChatActivity extends FragmentActivity implements DestinationDialogF
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		Log.d(LOG_TAG, "Inflate the menu; this adds items to the action bar if it is present.");
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_chat, menu);
 		return true;
@@ -171,11 +174,26 @@ public class ChatActivity extends FragmentActivity implements DestinationDialogF
 	}
 
 	private void exitApp() {
-		if(organizatorMessagingService != null) {
-			organizatorMessagingService.shutdown = true;
-			organizatorMessagingService.stopSelf();
-		}
-		finish();
+		new AlertDialog.Builder(this)
+        .setIcon(android.R.drawable.ic_dialog_alert)
+        .setTitle(R.string.exit_application)
+        .setMessage(R.string.exit_application_are_you_sure)
+        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                //Stop the activity
+        		if(organizatorMessagingService != null) {
+        			organizatorMessagingService.shutdown = true;
+        			organizatorMessagingService.stopSelf();
+        		}
+        		ChatActivity.this.finish();
+            }
+
+        })
+        .setNegativeButton(R.string.no, null)
+        .show();
 	}
 	
 	public void send(View view) {

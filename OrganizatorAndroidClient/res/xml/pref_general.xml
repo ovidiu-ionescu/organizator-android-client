@@ -10,7 +10,7 @@
     <Preference 
         android:title="@string/pref_title_app_version"
         android:summary="@string/pref_description_app_version"
-        android:enabled="false"
+        android:enabled="true"
         />
     
 </PreferenceScreen>

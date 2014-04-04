@@ -3,6 +3,7 @@
 
 	<string name="app_name">Organizator Android</string>
 	<string name="hello_world">Hello world!</string>
+	<string name="organizator_chat">Chat Organizator</string>
 	<string name="menu_chat_search">Chat Search</string>
 	<string name="menu_memo_search">Memo Search</string>
 	<string name="menu_settings">Settings</string>
@@ -26,4 +27,9 @@
 	<string name="SelectDestinations">Select Destination(s)</string>
 	<string name="Select">Select</string>
 	<string name="Cancel">Cancel</string>
+	
+	<string name="exit_application">Exit Organizator</string>
+	<string name="exit_application_are_you_sure">Are you sure you want to exit?</string>
+	<string name="yes">Yes</string>
+	<string name="no">No</string>
 </resources>

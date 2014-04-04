@@ -10,7 +10,7 @@
     <string name="pref_title_start_at_boot">Start at Boot</string>
 	<string name="pref_description_start_at_boot">If the Organizator client should start automatically at system startup.</string>
 	<string name="pref_title_app_version">Version</string>
-	<string name="pref_description_app_version">OrganizatorAndroidClient version 1.0 build 33</string>
+	<string name="pref_description_app_version">OrganizatorAndroidClient version 1.0 build 34</string>
     
     
 
