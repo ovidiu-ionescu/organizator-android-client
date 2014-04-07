@@ -464,7 +464,7 @@ public class OrganizatorMessagingService extends IntentService implements OnShar
 			Uri notificationSound = Uri.parse(newMessageRingTone);
 			builder.setSound(notificationSound);
 		}
-		long[] vibratePattern = { 300 }; 
+		long[] vibratePattern = { 0, 300 }; 
 		if(vibrateEnabled) {
 			builder.setVibrate(vibratePattern);
 		}
