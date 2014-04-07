@@ -52,7 +52,7 @@ public class MessageArrayAdapter extends ArrayAdapter<OrganizatorMessage> {
 
 		ViewHolder holder = (ViewHolder) rowView.getTag();
 		holder.message = msg;
-		holder.text.setText(msg.text);
+		holder.text.setText(MessagePresentation.getSmiledText(context, msg.text));
 		if(msg.self) {
 			holder.text.setGravity(Gravity.RIGHT);
 			holder.info.setGravity(Gravity.RIGHT);
