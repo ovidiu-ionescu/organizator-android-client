@@ -27,9 +27,27 @@
 	<string name="SelectDestinations">Select Destination(s)</string>
 	<string name="Select">Select</string>
 	<string name="Cancel">Cancel</string>
-	
+
 	<string name="exit_application">Exit Organizator</string>
 	<string name="exit_application_are_you_sure">Are you sure you want to exit?</string>
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
+
+	<string name="chat_search_menu_title_today">Today</string>
+	<string name="chat_search_menu_title_yesterday">Yesterday</string>
+	<string name="chat_search_menu_title_clear">Clear</string>
+
+	<string name="chat_menu_patraulea">Patraulea, dormi?</string>
+
+	<!-- Drawer -->
+	<string-array name="activities_array">
+		<item>Chat</item>
+		<item>Chat Search</item>
+		<item>Memo Search</item>
+		<item>Settings</item>
+		<item>Exit</item>
+    </string-array>
+	<string name="drawer_open">Open navigation drawer</string>
+	<string name="drawer_close">Close navigation drawer</string>
+	
 </resources>

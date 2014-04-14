@@ -5,14 +5,14 @@ import android.util.Log;
 public class Contact implements Comparable<Contact>, Cloneable {
 	static final String LOG_TAG = Contact.class.getName();
 	
-	int id;
-	String name;
-	boolean active;
-	boolean idle;
-	long check;
-	String agent;
-	boolean external;
-	boolean selected;
+	public int id;
+	public String name;
+	public boolean active;
+	public boolean idle;
+	public long check;
+	public String agent;
+	public boolean external;
+	public boolean selected;
 	Contact(String name) {
 		this.name = name;
 	}

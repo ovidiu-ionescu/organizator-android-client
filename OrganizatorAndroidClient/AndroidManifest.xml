@@ -55,6 +55,19 @@
             android:name="ro.organizator.android.organizatorclient.MemoActivity"
             android:label="@string/app_name" />
 
+        <activity
+            android:name="ro.organizator.android.organizatorclient.activity.MainActivity"
+            android:label="@string/app_name" 
+			android:theme="@style/Theme.AppCompat"
+			android:launchMode="singleInstance">
+            <intent-filter>
+                <!-- <action android:name="android.intent.action.MAIN" />  -->
+
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
         <receiver android:name="ro.organizator.android.organizatorclient.OrganizatorBroadcastReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

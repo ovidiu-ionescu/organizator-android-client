@@ -1,0 +1,35 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity" >
+
+	<Button 
+		android:id="@+id/chat_search_button"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/search"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentRight="true"
+		/>
+
+	<EditText 
+		android:id="@+id/chat_search_criteria"
+		android:layout_height="wrap_content"
+		android:inputType="text|textMultiLine"
+		android:hint="@string/type_search_criteria"
+		android:layout_alignParentBottom="true"
+		android:layout_width="match_parent"
+		android:layout_toLeftOf="@id/chat_search_button"
+		android:layout_alignParentLeft="true"
+		/>
+
+	<FrameLayout
+		android:id="@+id/chat_search_messages_placeholder"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_above="@id/chat_search_criteria"
+		android:layout_marginBottom="5dip"
+	    />
+
+</RelativeLayout>

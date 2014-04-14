@@ -23,9 +23,14 @@ public class DestinationDialogFragment extends DialogFragment {
 	public interface DestinationDialogListener {
 		public void onDialogPositiveClick(List<Contact> contacts);
 		public void onDialogNegativeClick(List<Contact> contacts);
+		public void setDestination(String[] destination);
 	}
 
 	DestinationDialogListener mListener;
+
+	public void setListener(DestinationDialogListener mListener) {
+		this.mListener = mListener;
+	}
 
 	List<Integer> mSelectedItems;
 	List<Contact> contacts;
@@ -37,7 +42,9 @@ public class DestinationDialogFragment extends DialogFragment {
 		try {
 			// Instantiate the NoticeDialogListener so we can send events to the
 			// host
-			mListener = (DestinationDialogListener) activity;
+			if(mListener == null) {
+				mListener = (DestinationDialogListener) activity;
+			}
 		} catch (ClassCastException e) {
 			// The activity doesn't implement the interface, throw exception
 			throw new ClassCastException(activity.toString() + " must implement DestinationDialogListener");

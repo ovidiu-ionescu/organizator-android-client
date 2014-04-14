@@ -23,5 +23,10 @@
         android:orderInCategory="100"
         organizator:showAsAction="ifRoom"
         android:title="@string/menu_exit"/>
+    
+    <item android:id="@+id/menu_drawer"
+		android:orderInCategory="100"
+		organizator:showAsAction="ifRoom"
+		android:title="Drawer" />
 
 </menu>

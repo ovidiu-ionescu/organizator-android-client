@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.View;
@@ -16,10 +15,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class MessageListFragment extends ListFragment {
-	
+
 	static final String LOG_TAG = MessageListFragment.class.getName();
-	
+
 	private ArrayAdapter<OrganizatorMessage> adapter;
+
+	private DestinationDialogFragment.DestinationDialogListener destinationListener;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -59,6 +60,9 @@ public class MessageListFragment extends ListFragment {
 
 	public void setMessages(List<OrganizatorMessage> msgs) {
 		adapter.clear();
+		if(msgs == null) {
+			return;
+		}
 		for (OrganizatorMessage msg : msgs) {
 			adapter.add(msg);
 		}
@@ -67,14 +71,13 @@ public class MessageListFragment extends ListFragment {
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		FragmentActivity activity = getActivity();
-		if(!(activity instanceof ChatActivity)) {
+		if(null == destinationListener) {
 			return;
 		}
-		ChatActivity chatActivity = (ChatActivity) getActivity();
+
 		OrganizatorMessage msg = ((MessageArrayAdapter.ViewHolder)v.getTag()).message;
 		if(msg.self) {
-			chatActivity.setDestination(msg.to);
+			destinationListener.setDestination(msg.to);
 		} else {
 			List<String> dest = new ArrayList<String>(msg.to.length);
 			dest.add(msg.from);
@@ -85,8 +88,11 @@ public class MessageListFragment extends ListFragment {
 					dest.add(to);
 				}
 			}
-
-			chatActivity.setDestination(dest.toArray(new String[dest.size()]));
+			destinationListener.setDestination(dest.toArray(new String[dest.size()]));
 		}
+	}
+
+	public void setDestinationListener(DestinationDialogFragment.DestinationDialogListener destinationListener) {
+		this.destinationListener = destinationListener;
 	}
 }

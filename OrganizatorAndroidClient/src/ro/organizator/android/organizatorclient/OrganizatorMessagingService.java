@@ -63,11 +63,11 @@ public class OrganizatorMessagingService extends IntentService implements OnShar
 	
 	private static final String ORGANIZATOR_CLIENT_MESSAGING_SERVICE_IS_RUNNING = "Organizator Client Messaging Service is Running.";
 	private static final String ORGANIZATOR_CLIENT_TICKER = "Organizator Client";
-	static final String UPDATED_CONTACTS = "updatedContacts";
-	static final String UPDATED_MESSAGES = "updatedMessages";
+	public static final String UPDATED_CONTACTS = "updatedContacts";
+	public static final String UPDATED_MESSAGES = "updatedMessages";
 	volatile boolean started;
 	volatile boolean viewActive;
-	volatile boolean shutdown;
+	volatile public boolean shutdown;
 
 	private CharSequence username;
 	private CharSequence password;
@@ -98,7 +98,7 @@ public class OrganizatorMessagingService extends IntentService implements OnShar
 	int contactCounter;
 	static CharSequence separator = "\n--endofsection";
 
-	volatile OrganizatorMessage lastSentMessage;
+	public volatile OrganizatorMessage lastSentMessage;
 	
 	private long lastProcessedId;
 	long lastServerTime;
@@ -246,7 +246,7 @@ public class OrganizatorMessagingService extends IntentService implements OnShar
 	}
 
 	public class LocalBinder extends Binder {
-		OrganizatorMessagingService getService() {
+		public OrganizatorMessagingService getService() {
 			return OrganizatorMessagingService.this;
 		}
 	}
@@ -439,6 +439,19 @@ public class OrganizatorMessagingService extends IntentService implements OnShar
 		}
 
 		if(viewActive) {
+			try {
+				if(!newMessageRingTone.isEmpty()) {
+					Uri notificationSound = Uri.parse(newMessageRingTone);
+					Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notificationSound);
+					r.play();
+				}
+				if(vibrateEnabled) {
+					Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+					vibrator.vibrate(300);
+				}
+			} catch (Exception e) {
+				Log.e(LOG_TAG, "Failed to make noise", e);
+			}
 			return;
 		}
 
@@ -547,6 +560,14 @@ public class OrganizatorMessagingService extends IntentService implements OnShar
 		this.viewActive = viewActive;
 	}
 
+	/**
+	 * An activity might decide to send a notification to the fragments this way
+	 */
+	public void forceSendNewDataNotifications() {
+		Log.d(LOG_TAG, "Force a new data intent to be broadcast");
+		notifyActivities(true, true);
+	}
+
 	private void notifyActivities(boolean updatedMessages, boolean updatedContacts) {
 		Intent intent = new Intent(DATA_RECEIVED);
 		intent.putExtra(UPDATED_MESSAGES, updatedMessages);
@@ -586,7 +607,7 @@ public class OrganizatorMessagingService extends IntentService implements OnShar
 		return responseCode;
 	}
 
-	int postMessage(OrganizatorMessage msg) throws IOException {
+	public int postMessage(OrganizatorMessage msg) throws IOException {
 		int code = postMessage2(msg);
 //		if(code == 401) {
 //			login(username, password);
@@ -652,7 +673,7 @@ public class OrganizatorMessagingService extends IntentService implements OnShar
 		return msg;
 	}
 
-	List<OrganizatorMessage> searchMessages(String criteria) throws IOException, JSONException {
+	public List<OrganizatorMessage> searchMessages(String criteria) throws IOException, JSONException {
 		List<OrganizatorMessage> messages = new ArrayList<OrganizatorMessage>();
 		JSONArray jsonMessages = fetchJsonObject(OrganizatorMessagingService.ORGANIZATOR_URL + "chatjson.ovi?method=searchMessages", new String[] {"message", criteria}).getJSONArray("messages");
 		for(int i = 0; i < jsonMessages.length(); i++) {
@@ -661,7 +682,7 @@ public class OrganizatorMessagingService extends IntentService implements OnShar
 		return messages;
 	}
 
-	List<MemoHit> searchMemos(String criteria) throws IOException, JSONException {
+	public List<MemoHit> searchMemos(String criteria) throws IOException, JSONException {
 		List<MemoHit> memoHits = new ArrayList<MemoHit>();
 
 		JSONArray jsonMemoHits = fetchJsonObject(OrganizatorMessagingService.ORGANIZATOR_URL + "memo/search", new String[] {"search", criteria}).getJSONArray("memos");

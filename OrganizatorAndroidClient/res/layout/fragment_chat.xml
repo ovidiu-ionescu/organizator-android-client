@@ -1,0 +1,47 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ChatActivity" >
+
+	<Button 
+		android:id="@+id/chat_sender"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/send"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentRight="true"
+		/>
+
+	<EditText 
+		android:id="@+id/chat_compose_message"
+		android:layout_height="wrap_content"
+		android:inputType="text|textCapSentences|textMultiLine"
+		android:hint="@string/type_message"
+		android:layout_alignParentBottom="true"
+		android:layout_width="match_parent"
+		android:layout_toLeftOf="@id/chat_sender"
+		android:layout_alignParentLeft="true"
+		/>
+
+	<TextView
+		android:id="@+id/chat_selectDestinations"
+		android:layout_above="@id/chat_compose_message"
+		android:gravity="left"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/select_destination"
+		style="@android:style/TextAppearance.Large"
+		/>
+
+	<FrameLayout
+		android:id="@+id/chat_messages_placeholder"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_above="@id/chat_selectDestinations"
+		android:layout_marginBottom="5dip"
+		android:layout_marginLeft="5dip"
+		android:layout_marginRight="5dip"
+		/>
+
+</RelativeLayout>

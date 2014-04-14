@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:organizator="http://schemas.android.com/apk/res-auto">
+    
+    <item
+        android:id="@+id/chat_search_menu_today"
+        android:orderInCategory="100"
+        organizator:showAsAction="ifRoom"
+        android:title="@string/chat_search_menu_title_today"/>
+    
+    <item
+        android:id="@+id/chat_search_menu_yesterday"
+        android:orderInCategory="100"
+        organizator:showAsAction="ifRoom"
+        android:title="@string/chat_search_menu_title_yesterday"/>
+    
+    <item
+        android:id="@+id/chat_search_menu_clear"
+        android:orderInCategory="100"
+        organizator:showAsAction="ifRoom"
+        android:title="@string/chat_search_menu_title_clear"/>
+    
+</menu>

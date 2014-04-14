@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ro.organizator.android.organizatorclient.activity.MainActivity;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -58,6 +59,7 @@ public class ChatActivity extends ActionBarActivity implements DestinationDialog
 		destinationButton = (Button) findViewById(R.id.selectDestinationsButton);
 
 		messageListFragment = ((MessageListFragment) getSupportFragmentManager().findFragmentById(R.id.messages));
+		messageListFragment.setDestinationListener(this);
 		registerForContextMenu(destinationButton);
 
 		// connect to the service
@@ -108,6 +110,9 @@ public class ChatActivity extends ActionBarActivity implements DestinationDialog
 		case R.id.menu_exit:
 			exitApp();
 			return true;
+		case R.id.menu_drawer:
+			gotoMainActivity();
+			return true;
 		}
 			
 		return super.onOptionsItemSelected(menuItem);
@@ -120,6 +125,11 @@ public class ChatActivity extends ActionBarActivity implements DestinationDialog
 
 	private void gotoMemoSearchActivity() {
 		Intent i = new Intent(this, MemoSearchActivity.class);
+		startActivity(i);
+	}
+	
+	private void gotoMainActivity() {
+		Intent i = new Intent(this, MainActivity.class);
 		startActivity(i);
 	}
 
