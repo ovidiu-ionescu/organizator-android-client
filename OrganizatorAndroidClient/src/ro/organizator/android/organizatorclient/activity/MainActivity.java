@@ -1,7 +1,9 @@
 package ro.organizator.android.organizatorclient.activity;
 
+import ro.organizator.android.organizatorclient.ChatActivity;
 import ro.organizator.android.organizatorclient.LoginActivity;
 import ro.organizator.android.organizatorclient.OrganizatorMessagingService;
+import ro.organizator.android.organizatorclient.OrganizatorSettingsActivity;
 import ro.organizator.android.organizatorclient.R;
 import ro.organizator.android.organizatorclient.fragments.ChatFragment;
 import ro.organizator.android.organizatorclient.fragments.ChatSearchFragment;
@@ -189,12 +191,22 @@ public class MainActivity extends ActionBarActivity {
     		fragment = new ChatSearchFragment();
     		Log.d(LOG_TAG, "Create a chat search fragment");
     		break;
+    	case 2:
+    		fragment = new MemoSearchFragment();
+    		Log.d(LOG_TAG, "Create a memo search fragment");
+    		break;
+    	case 3: 
+    		startActivity(new Intent(this, OrganizatorSettingsActivity.class));
+    		mDrawerLayout.closeDrawer(mDrawerList);
+    		return;
     	case 4:
+    		startActivity(new Intent(this, ChatActivity.class));
+    		mDrawerLayout.closeDrawer(mDrawerList);
+    		return;
+    	case 5:
     		exitApp();
     		return;
     	default:
-    		fragment = new MemoSearchFragment();
-    		Log.d(LOG_TAG, "Create a memo search fragment");
     	}
     	// Parameters for the fragment
         Bundle args = new Bundle();

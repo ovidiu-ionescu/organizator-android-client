@@ -11,6 +11,7 @@
 		android:text="@string/send"
 		android:layout_alignParentBottom="true"
 		android:layout_alignParentRight="true"
+		style="@android:style/TextAppearance.Large"
 		/>
 
 	<EditText 
@@ -22,6 +23,8 @@
 		android:layout_width="match_parent"
 		android:layout_toLeftOf="@id/chat_sender"
 		android:layout_alignParentLeft="true"
+		android:layout_marginTop="5dip"
+		android:layout_marginBottom="5dip"
 		/>
 
 	<TextView
@@ -30,7 +33,9 @@
 		android:gravity="left"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:text="@string/select_destination"
+		android:hint="@string/select_destination"
+		android:padding="5dip"
+		android:background="@drawable/back"
 		style="@android:style/TextAppearance.Large"
 		/>
 

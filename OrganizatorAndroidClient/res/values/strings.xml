@@ -45,6 +45,7 @@
 		<item>Chat Search</item>
 		<item>Memo Search</item>
 		<item>Settings</item>
+		<item>Old Chat</item>
 		<item>Exit</item>
     </string-array>
 	<string name="drawer_open">Open navigation drawer</string>

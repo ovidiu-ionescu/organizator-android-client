@@ -121,5 +121,52 @@ public class MessagePresentation {
 	    Spannable spannable = spannableFactory.newSpannable(text);
 	    addSmiles(context, spannable);
 	    return spannable;
-	}	
+	}
+
+	/**
+	 * 
+	 * @param diacritics
+	 * @return
+	 */
+	public static CharSequence removeDiacritics(CharSequence diacritics) {
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < diacritics.length(); i++) {
+			char c = diacritics.charAt(i);
+			char d = c;
+			switch(c) {
+			case 'ă':
+			case 'â':
+				d = 'a';
+				break;
+			case 'Ă':
+			case 'Â':
+				d = 'A';
+				break;
+			case 'î':
+				d= 'i';
+				break;
+			case 'Î':
+				d = 'I';
+				break;
+			case 'ș':
+			case 'ş': // bad old version
+				d = 's';
+				break;
+			case 'Ș':
+			case 'Ş': // bad old version
+				d = 'S';
+				break;
+			case 'ț':
+			case 'ţ': // bad old version
+				d = 't';
+				break;
+			case 'Ț':
+			case 'Ţ': // bad old version
+				d = 'T';
+				break;
+			}
+			sb.append(d);
+		}
+		return sb;
+	}
 }

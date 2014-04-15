@@ -7,6 +7,7 @@ import java.util.List;
 import ro.organizator.android.organizatorclient.Contact;
 import ro.organizator.android.organizatorclient.DestinationDialogFragment;
 import ro.organizator.android.organizatorclient.MessageListFragment;
+import ro.organizator.android.organizatorclient.MessagePresentation;
 import ro.organizator.android.organizatorclient.NotificationId;
 import ro.organizator.android.organizatorclient.OrganizatorMessage;
 import ro.organizator.android.organizatorclient.OrganizatorMessagingService;
@@ -18,15 +19,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.text.style.URLSpan;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -158,9 +162,24 @@ public class ChatFragment extends Fragment implements DestinationDialogFragment.
 	
 		// gather the destinations
 		List<String> dest = new ArrayList<String>();
+		List<Contact> destContact = new ArrayList<Contact>();
 		for(Contact contact: contacts) {
 			if(contact.selected) {
 				dest.add(contact.name);
+				destContact.add(contact);
+			}
+		}
+		if(destContact.isEmpty()) {
+			// TODO: complain, the user forgot to select a destination
+			return;
+		}
+		if(destContact.size() == 1) {
+			Contact singleDest = destContact.get(0);
+			if(!singleDest.active && singleDest.mobile != null) {
+				// send an SMS instead
+				Intent smsIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("sms:" + singleDest.mobile));
+				smsIntent.putExtra("sms_body", MessagePresentation.removeDiacritics(msg.text));
+				startActivity(smsIntent);
 			}
 		}
 		if(dest.isEmpty()) {
@@ -250,13 +269,14 @@ public class ChatFragment extends Fragment implements DestinationDialogFragment.
 //		}
 //	}
 //
-//	@Override
-//	public void onPause() {
-//		super.onPause();
-//		if(organizatorMessagingService != null) {
-//			organizatorMessagingService.setViewActive(false);
-//		}
-//	}
+	@Override
+	public void onPause() {
+		OrganizatorMessagingService organizatorMessagingService = ((MainActivity)getActivity()).organizatorMessagingService;
+		super.onPause();
+		if(organizatorMessagingService != null) {
+			organizatorMessagingService.setViewActive(false);
+		}
+	}
 
 	/**
 	 * Update the list of messages on the screen
@@ -364,8 +384,25 @@ public class ChatFragment extends Fragment implements DestinationDialogFragment.
 						Log.d(LOG_TAG, "Apply span at " + (end - contact.name.length()) + ", " + (end));
 						sb.setSpan(span, end - contact.name.length(), end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 						
+						sb.setSpan(
+								new ClickableSpan() {
+									@Override
+									public void onClick(View widget) {
+										// TODO Auto-generated method stub
+										
+									}
+								    @Override
+								    public void updateDrawState(TextPaint ds) {
+								    }
+							
+								}, end - contact.name.length(), end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+						
 						sep = ", ";
 					}
+				}
+				if(sb.length() == 0) {
+//					sb.append(getActivity().getResources().getString(R.string.select_destination));
+//					sb.setSpan(new RelativeSizeSpan(0.8f), 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 				}
 				destinationControl.setText(sb);
 			}

@@ -7,6 +7,7 @@ public class Contact implements Comparable<Contact>, Cloneable {
 	
 	public int id;
 	public String name;
+	public String mobile;
 	public boolean active;
 	public boolean idle;
 	public long check;

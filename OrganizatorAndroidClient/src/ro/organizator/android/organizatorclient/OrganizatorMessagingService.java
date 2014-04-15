@@ -23,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import ro.organizator.android.organizatorclient.activity.MainActivity;
 import android.annotation.TargetApi;
 import android.app.IntentService;
 import android.app.Notification;
@@ -341,6 +342,9 @@ public class OrganizatorMessagingService extends IntentService implements OnShar
 			Contact contact = new Contact(contactName);
 			// active, check
 			JSONObject jsonContact = jsonContacts.getJSONObject(contactName);
+			if(!jsonContact.isNull("mobile")) {
+				contact.mobile = jsonContact.getString("mobile");
+			}
 			if(!jsonContact.isNull("active")) {
 				contact.active = jsonContact.getBoolean("active");
 			}
@@ -413,7 +417,7 @@ public class OrganizatorMessagingService extends IntentService implements OnShar
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN) 
 	private void fg() {
 		Context ctx = getApplicationContext();
-		Intent intent = new Intent(OrganizatorMessagingService.this, ChatActivity.class);
+		Intent intent = new Intent(OrganizatorMessagingService.this, MainActivity.class);
 		PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx);
 
@@ -456,7 +460,7 @@ public class OrganizatorMessagingService extends IntentService implements OnShar
 		}
 
 		Context ctx = getApplicationContext();
-		Intent intent = new Intent(ctx, ChatActivity.class);
+		Intent intent = new Intent(ctx, MainActivity.class);
 		PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -525,7 +529,7 @@ public class OrganizatorMessagingService extends IntentService implements OnShar
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN) 
 	private void putNotification(CharSequence ticker, CharSequence content, int type, int icon, boolean lowPriority) {
 		Context ctx = getApplicationContext();
-		Intent intent = new Intent(ctx, ChatActivity.class);
+		Intent intent = new Intent(ctx, MainActivity.class);
 		PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);

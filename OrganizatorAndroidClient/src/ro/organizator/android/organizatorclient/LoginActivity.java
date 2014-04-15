@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.apache.http.client.ClientProtocolException;
 
+import ro.organizator.android.organizatorclient.activity.MainActivity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -141,7 +142,7 @@ public class LoginActivity extends Activity {
 
 				// start the chat activity
 				try {
-					Intent k = new Intent(getApplicationContext(), ChatActivity.class);
+					Intent k = new Intent(getApplicationContext(), MainActivity.class);
 					startActivity(k);
 				} catch(Exception e) {
 					

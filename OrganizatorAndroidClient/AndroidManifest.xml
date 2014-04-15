@@ -27,6 +27,7 @@
             android:label="@string/organizator_chat"
             android:launchMode="singleInstance"
             android:theme="@style/Theme.AppCompat" >
+<!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,6 +41,7 @@
 
                 <data android:mimeType="text/plain" />
             </intent-filter>
+-->
         </activity>
         <activity
             android:name="ro.organizator.android.organizatorclient.ChatSearchActivity"
@@ -61,12 +63,19 @@
 			android:theme="@style/Theme.AppCompat"
 			android:launchMode="singleInstance">
             <intent-filter>
-                <!-- <action android:name="android.intent.action.MAIN" />  -->
+                <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
             </intent-filter>
-        </activity>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            </activity>
         
         <receiver android:name="ro.organizator.android.organizatorclient.OrganizatorBroadcastReceiver" >
             <intent-filter>
