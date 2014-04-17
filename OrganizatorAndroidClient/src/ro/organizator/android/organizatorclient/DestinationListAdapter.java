@@ -11,6 +11,8 @@ import android.widget.CheckedTextView;
 import android.widget.ListAdapter;
 
 public class DestinationListAdapter implements ListAdapter {
+	
+	public static final String LOG_TAG = DestinationListAdapter.class.getName();
 
 	private int ACTIVE_COLOR;
 	private int IDLE_COLOR;

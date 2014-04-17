@@ -14,11 +14,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 public class DestinationDialogFragment extends DialogFragment {
+	public static final String LOG_TAG = DestinationDialogFragment.class.getName();
 
 	public interface DestinationDialogListener {
 		public void onDialogPositiveClick(List<Contact> contacts);
@@ -70,7 +72,7 @@ public class DestinationDialogFragment extends DialogFragment {
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View view = inflater.inflate(R.layout.destination_dialog, null);
 		final TextView destinationsPreview = (TextView) view.findViewById(R.id.selected_destinations_info);
-		ListView listView = (ListView) view.findViewById(R.id.destinationListView);
+		final ListView listView = (ListView) view.findViewById(R.id.destinationListView);
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -98,12 +100,37 @@ public class DestinationDialogFragment extends DialogFragment {
 						}
 					}
 				}).setNegativeButton(R.string.Cancel, new DialogInterface.OnClickListener() {
+					@Override
 					public void onClick(DialogInterface dialog, int id) {
 						DestinationDialogFragment.this.getDialog().cancel();
 					}
-				});
+				}).setNeutralButton(R.string.Clear, null) 
+				;
 		setDestinationsPreview(destinationsPreview, contacts);
-		return builder.create();
+		final AlertDialog dialog = builder.create();
+		
+		dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+			@Override
+			public void onShow(DialogInterface d) {
+				Button clear = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+				clear.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						int i = 0;
+						for(Contact contact: contacts) {
+							if(contact.selected) {
+								contact.selected = false;
+							}
+							listView.setItemChecked(i, false);
+							i++;
+						}
+						destinationsPreview.setText("");
+					}
+				});
+			}
+		});
+		
+		return dialog;
 	}
 
 	@Override

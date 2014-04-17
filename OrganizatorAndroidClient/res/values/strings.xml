@@ -27,6 +27,7 @@
 	<string name="SelectDestinations">Select Destination(s)</string>
 	<string name="Select">Select</string>
 	<string name="Cancel">Cancel</string>
+	<string name="Clear">Clear</string>
 
 	<string name="exit_application">Exit Organizator</string>
 	<string name="exit_application_are_you_sure">Are you sure you want to exit?</string>
