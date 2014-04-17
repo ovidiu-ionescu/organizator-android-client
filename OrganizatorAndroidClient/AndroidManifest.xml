@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ro.organizator.android.organizatorclient"
-    android:versionCode="40"
+    android:versionCode="41"
     android:versionName="1.0" >
 
     <uses-sdk
@@ -99,11 +99,11 @@
         <activity
             android:name="ro.organizator.android.organizatorclient.OrganizatorSettingsActivity"
             android:label="@string/title_activity_organizator_settings"
-            android:parentActivityName="ro.organizator.android.organizatorclient.ChatActivity" 
+            android:parentActivityName="ro.organizator.android.organizatorclient.activity.MainActivity" 
             android:theme="@style/Theme.AppCompat">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ro.organizator.android.organizatorclient.ChatActivity" />
+                android:value="ro.organizator.android.organizatorclient.activity.MainActivity" />
         </activity>
     </application>
 
