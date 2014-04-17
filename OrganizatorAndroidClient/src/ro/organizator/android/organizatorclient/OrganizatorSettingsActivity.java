@@ -62,9 +62,9 @@ public class OrganizatorSettingsActivity extends PreferenceActivity {
 			String versionName = pinfo.versionName;
 			
 			versionString = getResources().getString(R.string.app_name) + " version " + versionName + " build " + versionNumber;
+			Log.d(LOG_TAG, "Version is " + versionString);
 		} catch (NameNotFoundException e) {
 			Log.e(LOG_TAG, "Could not find own package name", e);
-			e.printStackTrace();
 		}
 
 	}
@@ -138,6 +138,7 @@ public class OrganizatorSettingsActivity extends PreferenceActivity {
 		// their values. When their values change, their summaries are updated
 		// to reflect the new value, per the Android Design guidelines.
 		bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"));
+		findPreference("version").setSummary(versionString);
 	}
 
 	/** {@inheritDoc} */
@@ -260,7 +261,7 @@ public class OrganizatorSettingsActivity extends PreferenceActivity {
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.pref_general);
-			
+
 			findPreference("version").setSummary(versionString);
 
 			// Bind the summaries of EditText/List/Dialog/Ringtone preferences
