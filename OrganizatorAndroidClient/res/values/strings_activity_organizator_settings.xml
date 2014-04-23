@@ -28,7 +28,10 @@
     <string name="pref_title_led_notification_color">Led light notification color</string>
     <string name="pref_description_led_notification_color">Choose a color for the led notification light.</string>
     <string name="pref_description_service_running">Show icon for the connection status of the Organizator service; empty tulip, no connection. Wait up to a minute for the setting to activate.</string>
-
+	<string name="pref_title_force_silent_notification">Force silent notification</string>
+    <string name="pref_description_force_silent_notification">Force silent notification, only use the icon bar and the led, no sound or vibration</string>
+	    
+    
 	<!-- Sony Watch Settings -->
 	<string name="pref_header_sony_watch">Sony Watch</string>
 	<string name="pref_title_send_notifications_to_sony_watch">Notify Sony Watch</string>

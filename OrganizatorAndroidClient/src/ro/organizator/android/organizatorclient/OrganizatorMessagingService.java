@@ -59,6 +59,7 @@ public class OrganizatorMessagingService extends IntentService implements OnShar
 	public static final String NOTIFICATIONS_NEW_MESSAGE_VIBRATE = "notifications_new_message_vibrate";
 	public static final String NOTIFICATIONS_NEW_MESSAGE_RINGTONE = "notifications_new_message_ringtone";
 	public static final String NOTIFICATIONS_SERVICE_RUNNING = "notifications_service_running";
+	public static final String NOTIFICATIONS_NEW_FORCE_SILENT="notifications_force_silent";
 
 	private static final String LOG_TAG = OrganizatorMessagingService.class.getName() + " OI:";
 	
@@ -84,6 +85,7 @@ public class OrganizatorMessagingService extends IntentService implements OnShar
 	volatile long lastMessageIdForWearable = 0;
 	volatile boolean ledNotification = true;
 	volatile int ledNotificationColor = 0xFFFF0000;
+	volatile boolean forceSilentNotification = false;
 	
 	boolean loggingEnabled = false;
 	boolean devMessages = false;
@@ -124,6 +126,7 @@ public class OrganizatorMessagingService extends IntentService implements OnShar
 		lastMessageIdForWearable = lastMessageIdForWearableString.isEmpty() ? 0 : Long.parseLong(lastMessageIdForWearableString, 10);
 		ledNotification = sharedPreferences.getBoolean(LED_NOTIFICATION, true);
 		ledNotificationColor = sharedPreferences.getInt(LED_NOTIFICATION_COLOR, 0xFFFF0000);
+		forceSilentNotification = sharedPreferences.getBoolean(NOTIFICATIONS_NEW_FORCE_SILENT, false);
 		
 		sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 	}
@@ -442,7 +445,7 @@ public class OrganizatorMessagingService extends IntentService implements OnShar
 			return;
 		}
 
-		if(viewActive) {
+		if(viewActive && !forceSilentNotification) {
 			try {
 				if(!newMessageRingTone.isEmpty()) {
 					Uri notificationSound = Uri.parse(newMessageRingTone);
@@ -477,12 +480,12 @@ public class OrganizatorMessagingService extends IntentService implements OnShar
 					.setContentText(content)
 					;
 
-		if(!newMessageRingTone.isEmpty()) {
+		if(!newMessageRingTone.isEmpty() && !forceSilentNotification) {
 			Uri notificationSound = Uri.parse(newMessageRingTone);
 			builder.setSound(notificationSound);
 		}
 		long[] vibratePattern = { 0, 300 }; 
-		if(vibrateEnabled) {
+		if(vibrateEnabled && !forceSilentNotification) {
 			builder.setVibrate(vibratePattern);
 		}
 		if(ledNotification) {
@@ -793,6 +796,9 @@ public class OrganizatorMessagingService extends IntentService implements OnShar
 		} else if(LED_NOTIFICATION.equals(key)) {
 			ledNotification = sharedPreferences.getBoolean(key, true);
 			Log.d(LOG_TAG, "Let light notification: " + ledNotification);
+		} else if(NOTIFICATIONS_NEW_FORCE_SILENT.equals(key)) {
+			forceSilentNotification = sharedPreferences.getBoolean(NOTIFICATIONS_NEW_FORCE_SILENT, false);
+			Log.d(LOG_TAG, "Force silent notification: " + forceSilentNotification);
 		}
 	}
 }

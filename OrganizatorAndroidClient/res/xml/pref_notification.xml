@@ -40,6 +40,13 @@
 		android:title="@string/pref_title_led_notification_color"
 		android:summary="@string/pref_description_led_notification_color" />
     
+    <CheckBoxPreference
+        android:key="notifications_force_silent"
+        android:dependency="notifications_new_message"
+        android:title="@string/pref_title_force_silent_notification"
+        android:summary="@string/pref_description_force_silent_notification" />
+        />
+    
 	<CheckBoxPreference 
 	    android:defaultValue="true"
 	    android:key="notifications_service_running"
