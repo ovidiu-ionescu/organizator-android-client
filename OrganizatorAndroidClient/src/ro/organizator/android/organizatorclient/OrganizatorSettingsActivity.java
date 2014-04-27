@@ -1,9 +1,10 @@
 package ro.organizator.android.organizatorclient;
 
+import java.util.List;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.media.Ringtone;
@@ -18,23 +19,13 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.support.v4.app.NavUtils;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
-import android.support.v4.app.NavUtils;
-
-import java.util.List;
 
 /**
- * A {@link PreferenceActivity} that presents a set of application settings. On
- * handset devices, settings are presented as a single list. On tablets,
- * settings are split by category, with category headers shown to the left of
- * the list of settings.
- * <p>
- * See <a href="http://developer.android.com/design/patterns/settings.html">
- * Android Design: Settings</a> for design guidelines and the <a
- * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
- * API Guide</a> for more information on developing a Settings UI.
+ * Preferences class. Uses the Android guidelines.
  */
 public class OrganizatorSettingsActivity extends PreferenceActivity {
 	
@@ -128,6 +119,19 @@ public class OrganizatorSettingsActivity extends PreferenceActivity {
 		getPreferenceScreen().addPreference(fakeHeader);
 		addPreferencesFromResource(R.xml.pref_notification);
 
+		// Add predefined messages preferences
+		fakeHeader = new PreferenceCategory(this);
+		fakeHeader.setTitle(R.string.pref_header_predefined);
+		getPreferenceScreen().addPreference(fakeHeader);
+		addPreferencesFromResource(R.xml.pref_predefined);
+
+		bindPreferenceSummaryToValue(findPreference("pref_custom_message_1"));		
+		bindPreferenceSummaryToValue(findPreference("pref_custom_message_2"));
+		bindPreferenceSummaryToValue(findPreference("pref_custom_message_3"));
+		bindPreferenceSummaryToValue(findPreference("pref_custom_message_4"));
+		bindPreferenceSummaryToValue(findPreference("pref_custom_message_5"));
+
+		
 		// Add 'Sony Watch' preferences and a corresponding header
 		fakeHeader = new PreferenceCategory(this);
 		fakeHeader.setTitle(R.string.pref_header_sony_watch);
@@ -276,8 +280,7 @@ public class OrganizatorSettingsActivity extends PreferenceActivity {
 	 * activity is showing a two-pane settings UI.
 	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	public static class NotificationPreferenceFragment extends
-			PreferenceFragment {
+	public static class NotificationPreferenceFragment extends PreferenceFragment {
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
@@ -291,6 +294,20 @@ public class OrganizatorSettingsActivity extends PreferenceActivity {
 		}
 	}
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public static class PredefinedPreferenceFragment extends PreferenceFragment {
+		@Override
+		public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			addPreferencesFromResource(R.xml.pref_predefined);
+			bindPreferenceSummaryToValue(findPreference("pref_custom_message_1"));
+			bindPreferenceSummaryToValue(findPreference("pref_custom_message_2"));
+			bindPreferenceSummaryToValue(findPreference("pref_custom_message_3"));
+			bindPreferenceSummaryToValue(findPreference("pref_custom_message_4"));
+			bindPreferenceSummaryToValue(findPreference("pref_custom_message_5"));
+		}
+	}
+	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public static class SonyWatchPreferenceFragment extends PreferenceFragment {
 		

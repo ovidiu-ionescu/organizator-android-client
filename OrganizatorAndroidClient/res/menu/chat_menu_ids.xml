@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:organizator="http://schemas.android.com/apk/res-auto">
+    
+    <item
+        android:id="@+id/chat_menu_custom1"
+        android:orderInCategory="100"
+        organizator:showAsAction="ifRoom"
+        android:title="@string/chat_menu_patraulea"/>
+    <item
+        android:id="@+id/chat_menu_custom2"
+        android:orderInCategory="100"
+        organizator:showAsAction="ifRoom"
+        android:title="@string/chat_menu_patraulea"/>
+	<item
+        android:id="@+id/chat_menu_custom3"
+        android:orderInCategory="100"
+        organizator:showAsAction="ifRoom"
+        android:title="@string/chat_menu_patraulea"/>
+	<item
+        android:id="@+id/chat_menu_custom4"
+        android:orderInCategory="100"
+        organizator:showAsAction="ifRoom"
+        android:title="@string/chat_menu_patraulea"/>
+	<item
+        android:id="@+id/chat_menu_custom5"
+        android:orderInCategory="100"
+        organizator:showAsAction="ifRoom"
+        android:title="@string/chat_menu_patraulea"/>
+        
+</menu>

@@ -13,15 +13,19 @@ import ro.organizator.android.organizatorclient.OrganizatorMessage;
 import ro.organizator.android.organizatorclient.OrganizatorMessagingService;
 import ro.organizator.android.organizatorclient.R;
 import ro.organizator.android.organizatorclient.activity.MainActivity;
+import android.annotation.TargetApi;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Spannable;
@@ -124,17 +128,51 @@ public class ChatFragment extends Fragment implements DestinationDialogFragment.
 		}
 	};
 
-	@Override
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB) @Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.chat_menu, menu);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+			SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+			int ids[] = new int[] {
+					R.id.chat_menu_custom1,
+					R.id.chat_menu_custom2,
+					R.id.chat_menu_custom3,
+					R.id.chat_menu_custom4,
+					R.id.chat_menu_custom5,
+					};
+			for(int i = 1; i < 6; i++) {
+				String custom = sharedPreferences.getString("pref_custom_message_" + i, "");
+				if(custom.length() > 0) {
+					MenuItem menuItem  = menu.add(Menu.NONE, ids[i  - 1], Menu.NONE, custom);					
+					menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+				}
+			}
+		} else {
+			inflater.inflate(R.menu.chat_menu, menu);
+		}
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 		switch (menuItem.getItemId()) {
 		case R.id.chat_menu_patraulea:
-			patrauleaDormi();
+			sendPredefinedMessage("Patraulea, dormi?");
+			return true;
+		case R.id.chat_menu_custom1:
+			sendPredefinedMessage(sharedPreferences.getString("pref_custom_message_1", ""));
+			return true;
+		case R.id.chat_menu_custom2:
+			sendPredefinedMessage(sharedPreferences.getString("pref_custom_message_2", ""));
+			return true;
+		case R.id.chat_menu_custom3:
+			sendPredefinedMessage(sharedPreferences.getString("pref_custom_message_3", ""));
+			return true;
+		case R.id.chat_menu_custom4:
+			sendPredefinedMessage(sharedPreferences.getString("pref_custom_message_4", ""));
+			return true;
+		case R.id.chat_menu_custom5:
+			sendPredefinedMessage(sharedPreferences.getString("pref_custom_message_5", ""));
 			return true;
 		}
 			
@@ -147,8 +185,12 @@ public class ChatFragment extends Fragment implements DestinationDialogFragment.
 		openDestinationsDialog(view);
 	}
 
-	private void patrauleaDormi() {
-		((EditText) getView().findViewById(R.id.chat_compose_message)).setText("Patraulea, dormi?");
+	private void sendPredefinedMessage(String message) {
+		if(message.length() == 0) {
+			// will not send an empty message
+			return;
+		}
+		((EditText) getView().findViewById(R.id.chat_compose_message)).setText(message);
 		send(null);
 	}
 

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <EditTextPreference
+		android:key="pref_custom_message_1"
+		android:title="@string/pref_title_custom_message_1"
+		android:inputType="text" />
+    <EditTextPreference
+		android:key="pref_custom_message_2"
+		android:title="@string/pref_title_custom_message_2"
+		android:inputType="text" />
+    <EditTextPreference
+		android:key="pref_custom_message_3"
+		android:title="@string/pref_title_custom_message_3"
+		android:inputType="text" />
+    <EditTextPreference
+		android:key="pref_custom_message_4"
+		android:title="@string/pref_title_custom_message_4"
+		android:inputType="text" />
+    <EditTextPreference
+		android:key="pref_custom_message_5"
+		android:title="@string/pref_title_custom_message_5"
+		android:inputType="text" />
+</PreferenceScreen>

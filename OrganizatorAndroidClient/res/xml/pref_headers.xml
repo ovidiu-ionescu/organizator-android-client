@@ -9,6 +9,10 @@
         android:fragment="ro.organizator.android.organizatorclient.OrganizatorSettingsActivity$NotificationPreferenceFragment"
         android:title="@string/pref_header_notifications" />
     <header
+        android:fragment="ro.organizator.android.organizatorclient.OrganizatorSettingsActivity$PredefinedPreferenceFragment"
+        android:title="@string/pref_header_predefined" />
+        />
+    <header
         android:fragment="ro.organizator.android.organizatorclient.OrganizatorSettingsActivity$SonyWatchPreferenceFragment"
         android:title="@string/pref_header_sony_watch"
         />

@@ -30,8 +30,15 @@
     <string name="pref_description_service_running">Show icon for the connection status of the Organizator service; empty tulip, no connection. Wait up to a minute for the setting to activate.</string>
 	<string name="pref_title_force_silent_notification">Force silent notification</string>
     <string name="pref_description_force_silent_notification">Force silent notification, only use the icon bar and the led, no sound or vibration</string>
-	    
-    
+
+    <string name="pref_header_predefined">Predefined Messages</string>
+    <string name="pref_title_custom_message_1">Custom message 1</string>	    
+    <string name="pref_title_custom_message_2">Custom message 2</string>	    
+	<string name="pref_title_custom_message_3">Custom message 3</string>	    
+	<string name="pref_title_custom_message_4">Custom message 4</string>	    
+	<string name="pref_title_custom_message_5">Custom message 5</string>
+		    
+        
 	<!-- Sony Watch Settings -->
 	<string name="pref_header_sony_watch">Sony Watch</string>
 	<string name="pref_title_send_notifications_to_sony_watch">Notify Sony Watch</string>
